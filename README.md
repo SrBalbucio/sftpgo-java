@@ -2,6 +2,9 @@
 
 SDK em Java 11 para a [API REST do SFTPGo](https://sftpgo.com/rest-api). Inclui as categorias **Users**, **Groups**, **Quota** e **Folder** (virtual folders).
 
+[![](https://img.shields.io/badge/HyperPowered-Use%20the%20official%20repository-yellow?color=%23279BF8&cacheSeconds=3600)](https://maven.dev.hyperpowered.net/#/releases/balbucio/org/sftpgo/)
+
+
 ## Requisitos
 
 - Java 11+
