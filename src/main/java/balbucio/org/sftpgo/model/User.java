@@ -124,7 +124,7 @@ public class User {
     private Object filters;
 
     @JsonProperty("filesystem")
-    private Map<String, Object> filesystem;
+    private FilesystemConfig filesystem;
 
     @JsonProperty("additional_info")
     private String additionalInfo;

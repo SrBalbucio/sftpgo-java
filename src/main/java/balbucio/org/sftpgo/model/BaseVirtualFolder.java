@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Virtual folder (base schema). Can be extended with virtual_path and quota for per-user mapping.
@@ -43,9 +42,6 @@ public class BaseVirtualFolder {
     @JsonProperty("users")
     private List<String> users;
 
-    /**
-     * Filesystem config (provider, osconfig, s3config, etc.). Use Map for flexibility with all backend types.
-     */
     @JsonProperty("filesystem")
-    private Map<String, Object> filesystem;
+    private FilesystemConfig filesystem;
 }

@@ -93,6 +93,55 @@ client.folders().updateFolder("compartilhado", folder);
 client.folders().deleteFolder("compartilhado");
 ```
 
+### Configuração de filesystem (S3, GCS, Azure, etc.)
+
+Pastas virtuais e usuários podem usar um backend de armazenamento configurado via `FilesystemConfig`:
+
+```java
+import balbucio.org.sftpgo.model.FilesystemConfig;
+import balbucio.org.sftpgo.model.S3Config;
+import balbucio.org.sftpgo.model.GCSConfig;
+import balbucio.org.sftpgo.model.AzureBlobFsConfig;
+import balbucio.org.sftpgo.model.FsProvider;
+import balbucio.org.sftpgo.model.Secret;
+
+// S3 (provider = 1)
+S3Config s3 = S3Config.builder()
+    .bucket("meu-bucket")
+    .region("us-east-1")
+    .accessKey("AKIA...")
+    .accessSecret(Secret.builder().status("Plain").payload("secret").build())
+    .keyPrefix("pasta/")  // opcional: chroot no bucket
+    .build();
+FilesystemConfig fs = FilesystemConfig.builder()
+    .provider(FsProvider.S3.getCode())
+    .s3config(s3)
+    .build();
+
+// Google Cloud Storage (provider = 2)
+GCSConfig gcs = GCSConfig.builder()
+    .bucket("meu-bucket-gcs")
+    .credentials(Secret.builder().status("Plain").payload("{\"type\":\"service_account\",...}").build())
+    .build();
+FilesystemConfig fsGcs = FilesystemConfig.builder()
+    .provider(FsProvider.GCS.getCode())
+    .gcsconfig(gcs)
+    .build();
+
+// Azure Blob (provider = 3)
+AzureBlobFsConfig az = AzureBlobFsConfig.builder()
+    .container("container")
+    .accountName("minha-conta")
+    .accountKey(Secret.builder().status("Plain").payload("key").build())
+    .build();
+FilesystemConfig fsAz = FilesystemConfig.builder()
+    .provider(FsProvider.AZURE_BLOB.getCode())
+    .azblobconfig(az)
+    .build();
+```
+
+Também existem: `OSFsConfig` (local), `CryptFsConfig` (criptografado), `SFTPFsConfig`, `HTTPFsConfig`. Use o enum `FsProvider` (LOCAL=0, S3=1, GCS=2, AZURE_BLOB=3, CRYPT=4, SFTP=5, HTTP=6) para o campo `provider`.
+
 ### Quota
 
 ```java

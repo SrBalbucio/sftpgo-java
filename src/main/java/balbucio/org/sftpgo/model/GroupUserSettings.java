@@ -55,5 +55,5 @@ public class GroupUserSettings {
     private Object filters;
 
     @JsonProperty("filesystem")
-    private Map<String, Object> filesystem;
+    private FilesystemConfig filesystem;
 }
