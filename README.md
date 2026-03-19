@@ -93,6 +93,45 @@ client.folders().updateFolder("compartilhado", folder);
 client.folders().deleteFolder("compartilhado");
 ```
 
+### Adicionar virtual folder ao usuário
+
+Exemplo de como **associar** um virtual folder a um usuário via `User.virtualFolders`:
+
+```java
+import balbucio.org.sftpgo.model.BaseVirtualFolder;
+import balbucio.org.sftpgo.model.User;
+import balbucio.org.sftpgo.model.VirtualFolder;
+import java.util.List;
+
+// 1) Crie (ou obtenha) o virtual folder
+BaseVirtualFolder shared = BaseVirtualFolder.builder()
+    .name("compartilhado")
+    .mappedPath("/var/sftpgo/shared")
+    .build();
+client.folders().addFolder(shared);
+
+// (Opcional) pegar os dados completos do folder
+BaseVirtualFolder existing = client.folders().getFolderByName("compartilhado");
+
+// 2) Carregue o usuário atual (boa prática: atualizar a partir do estado atual)
+User user = client.users().getUserByUsername("joao");
+
+// 3) Monte o mapeamento do folder para o usuário (virtual_path + quota opcional)
+VirtualFolder mapping = VirtualFolder.builder()
+    .name(existing.getName())
+    .mappedPath(existing.getMappedPath())
+    .filesystem(existing.getFilesystem())
+    .virtualPath("/shared")     // caminho visto pelo usuário
+    .quotaSize(0L)              // 0 = ilimitado, -1 = incluído na quota do usuário
+    .quotaFiles(0)              // 0 = ilimitado, -1 = incluído na quota do usuário
+    .build();
+
+user.setVirtualFolders(List.of(mapping));
+
+// 4) Atualize o usuário
+client.users().updateUser("joao", user);
+```
+
 ### Configuração de filesystem (S3, GCS, Azure, etc.)
 
 Pastas virtuais e usuários podem usar um backend de armazenamento configurado via `FilesystemConfig`:
