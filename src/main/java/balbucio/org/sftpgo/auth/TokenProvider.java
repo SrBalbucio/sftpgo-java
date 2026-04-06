@@ -2,6 +2,8 @@ package balbucio.org.sftpgo.auth;
 
 import balbucio.org.sftpgo.client.ApiClient;
 import balbucio.org.sftpgo.model.Token;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 
 import java.net.URI;
@@ -19,6 +21,9 @@ import java.util.function.Supplier;
  */
 @Getter
 public class TokenProvider implements Supplier<String> {
+
+    private static final ObjectMapper TOKEN_MAPPER = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String HEADER_API_KEY = "X-SFTPGO-API-KEY";
@@ -92,7 +97,8 @@ public class TokenProvider implements Supplier<String> {
             Token token = parseToken(response.body());
             if (token != null && token.getAccessToken() != null) {
                 this.bearerToken = token.getAccessToken();
-                this.tokenExpiration = token.getExpiration();
+                Long expiration = token.getExpiresAt() != null ? token.getExpiresAt() : token.getExpiration();
+                this.tokenExpiration = expiration != null ? String.valueOf(expiration) : null;
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to obtain token", e);
@@ -101,7 +107,7 @@ public class TokenProvider implements Supplier<String> {
 
     private static Token parseToken(String json) {
         try {
-            return new com.fasterxml.jackson.databind.ObjectMapper().readValue(json, Token.class);
+            return TOKEN_MAPPER.readValue(json, Token.class);
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse token response", e);
         }

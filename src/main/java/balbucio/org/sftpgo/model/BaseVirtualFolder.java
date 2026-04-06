@@ -1,9 +1,9 @@
 package balbucio.org.sftpgo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * Virtual folder (base schema). Can be extended with virtual_path and quota for per-user mapping.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @SuperBuilder
 @NoArgsConstructor

@@ -1,5 +1,6 @@
 package balbucio.org.sftpgo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
  * Storage filesystem configuration. Exactly one of osconfig, s3config, gcsconfig, azblobconfig,
  * cryptconfig, sftpconfig, httpconfig should be set according to provider (0=OS, 1=S3, 2=GCS, 3=Azure, 4=Crypt, 5=SFTP, 6=HTTP).
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @Builder
 @NoArgsConstructor

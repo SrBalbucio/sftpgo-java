@@ -1,5 +1,6 @@
 package balbucio.org.sftpgo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.util.Map;
 /**
  * Virtual folder mapping for a user: path + quota. Used inside User and Group.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
