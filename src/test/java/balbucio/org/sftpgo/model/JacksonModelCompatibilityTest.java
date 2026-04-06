@@ -1,14 +1,17 @@
 package balbucio.org.sftpgo.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class JacksonModelCompatibilityTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Test
     void shouldIgnoreUnknownPropertiesAcrossNestedModels() throws Exception {
@@ -52,7 +55,7 @@ class JacksonModelCompatibilityTest {
         String json = "{" +
                 "\"access_token\":\"jwt-token\"," +
                 "\"expiration\":3600," +
-                "\"expires_at\":1712438400," +
+                "\"expires_at\":\"2026-04-06T15:30:00\"," +
                 "\"unexpected\":\"ignored\"" +
                 "}";
 
@@ -60,7 +63,7 @@ class JacksonModelCompatibilityTest {
 
         assertEquals("jwt-token", token.getAccessToken());
         assertEquals(3600L, token.getExpiration());
-        assertEquals(1712438400L, token.getExpiresAt());
+        assertEquals(LocalDateTime.of(2026, 4, 6, 15, 30), token.getExpiresAt());
     }
 }
 

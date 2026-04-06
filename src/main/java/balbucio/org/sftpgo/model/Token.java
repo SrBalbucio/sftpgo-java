@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * Token response from GET /token (admin) or GET /user/token (user).
  */
@@ -24,5 +26,5 @@ public class Token {
     private Long expiration;
 
     @JsonProperty("expires_at")
-    private Long expiresAt;
+    private LocalDateTime expiresAt;
 }

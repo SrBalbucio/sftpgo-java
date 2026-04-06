@@ -4,6 +4,7 @@ import balbucio.org.sftpgo.client.ApiClient;
 import balbucio.org.sftpgo.model.Token;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Getter;
 
 import java.net.URI;
@@ -23,6 +24,7 @@ import java.util.function.Supplier;
 public class TokenProvider implements Supplier<String> {
 
     private static final ObjectMapper TOKEN_MAPPER = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     public static final String HEADER_AUTHORIZATION = "Authorization";
@@ -97,8 +99,9 @@ public class TokenProvider implements Supplier<String> {
             Token token = parseToken(response.body());
             if (token != null && token.getAccessToken() != null) {
                 this.bearerToken = token.getAccessToken();
-                Long expiration = token.getExpiresAt() != null ? token.getExpiresAt() : token.getExpiration();
-                this.tokenExpiration = expiration != null ? String.valueOf(expiration) : null;
+                this.tokenExpiration = token.getExpiresAt() != null
+                        ? token.getExpiresAt().toString()
+                        : token.getExpiration() != null ? String.valueOf(token.getExpiration()) : null;
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to obtain token", e);
